@@ -9,35 +9,13 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class Test extends cc.Component {
 
-    private colorArr = [cc.Color.WHITE,cc.Color.GREEN,cc.Color.BLUE,cc.Color.YELLOW,cc.Color.RED]
+    private colorArr = [cc.Color.WHITE,cc.Color.ORANGE,cc.Color.BLUE,cc.Color.YELLOW,cc.Color.RED]
     // onLoad () {}
     start () {
 
     }
-    //两个整型数组，各取一个数字之和等于一个整数，分析其算法复杂度
-    checkArrNum(){
-        let a = [10,20,40,50];
-        let b = [90,88,20,3];
-        let v = 43;
-        let isBool = false;
-        for (let index = 0; index < a.length; index++) {
-            const elementA = a[index];
-            for (let j = 0; j < b.length; j++) {
-                const elementB = b[j];
-                if (elementA + elementB == v) {
-                    isBool = true;
-                    break;
-                }
-            }
-        }
-        if (isBool) {//大O算法复杂度
-            //其中 n 和 m 分别是数组 a 和数组 b 的长度。这个算法的时间复杂度是线性的，因为只需要遍历一次数组 a 和一次数组 b
-            // T = O(m+n)
-        }
-        return isBool;
-    }
  
-    //  打印矩阵到界面
+    //  生成矩阵到界面
     printMatrix() {
         let editX = this.node.getChildByName("EditBoxX").getComponent(cc.EditBox);
         let editY = this.node.getChildByName("EditBoxY").getComponent(cc.EditBox);
@@ -50,6 +28,7 @@ export default class Test extends cc.Component {
         let contentNode = this.node.getChildByName("contentNode");
         contentNode.removeAllChildren();
         cc.Tween.stopAllByTarget(this.node);
+        //初始化颜色数组
         for (let i = 0; i <10; i++) {
             matrixColor[i] = []
             for (let j = 0; j < 10; j++) {
@@ -78,14 +57,15 @@ export default class Test extends cc.Component {
                     }
                 }
 
+                //创建label来显示矩阵
                 let func = ()=>{
                     let textNode = new cc.Node();
                     let label = textNode.addComponent(cc.Label);
                     contentNode.addChild(textNode);
                     textNode.position = cc.v3(posx + i*60,posY - j*35);
                     label.string = i + 1+ "";
-                    label.fontSize = 30
-                    textNode.color = matrixColor[i][j]//this.colorArr[random];
+                    label.fontSize = 30;
+                    textNode.color = matrixColor[i][j];
                 }
                 cc.tween(this.node)
                 .delay(time)
@@ -99,9 +79,14 @@ export default class Test extends cc.Component {
        
     }
 
+    //点击按钮生成矩阵
     onClickButton(){
         this.printMatrix();
+    }
 
+    //点击显示按钮
+    onClickShowBtn(){
+        //左侧play按钮的一些动效展示，确实是效果有点对不上
         let playBtn = this.node.getChildByName("button");
         playBtn.active = true;
         playBtn.scale = 1.1;
@@ -113,17 +98,14 @@ export default class Test extends cc.Component {
 
         let tween = cc.tween(playBtn).to(0.1,{scale:1.1}).to(0.1,{scale:1});
         cc.tween(playBtn)
-        // .to(0.2,{scale:1.2,rotation:-10})
         .to(0.1,{scale:1,rotation:0})
         .repeat(3,tween)
-        .call(()=>{
-            // playBtn.scaleX = 1.2
-        })
         .repeatForever(tween1)
         .start();
     }
 
-    onClickBtn(){
+    //点击play按钮有效果展示
+    onClickPlayBtn(){
         let playBtn = this.node.getChildByName("button");
         playBtn.color = cc.Color.GRAY;
         cc.Tween.stopAllByTarget(playBtn);
@@ -137,33 +119,45 @@ export default class Test extends cc.Component {
 
         let tween3 = cc.tween(playBtn)
         .to(0.1,{scale:0.7})
-        // .delay(0.1)
         .to(0.1,{scale:0.8});
 
 
         cc.tween(playBtn)
         .to(0.1,{scale:0.8})
         .repeat(3,tween3)
-        // .call(()=>{
-        //     playBtn.scaleX = 0.7;
-        // })
         .delay(0.7)
         .call(()=>{
             playBtn.color = cc.Color.WHITE;
         })
         .repeat(3,tween)
         .repeatForever(tween2)
-        // .to(0.1,{scale:1})
-        // .to(0.1,{scale:1.2})
         .call(()=>{
             playBtn.scale = 1;
-            // playBtn.color = cc.Color.WHITE;
         })
-        // .to(0.2,{scale:1})
-        // .call(()=>{
-        //     playBtn.color = cc.Color.WHITE;
-        // })
         .start();
+    }
+
+     //两个整型数组，各取一个数字之和等于一个整数，分析其算法复杂度
+     checkArrNum(){
+        let a = [10,20,40,50];
+        let b = [90,88,20,3];
+        let v = 43;
+        let isBool = false;
+        for (let index = 0; index < a.length; index++) {
+            const elementA = a[index];
+            for (let j = 0; j < b.length; j++) {
+                const elementB = b[j];
+                if (elementA + elementB == v) {
+                    isBool = true;
+                    break;
+                }
+            }
+        }
+        if (isBool) {//大O算法复杂度
+            //其中 n 和 m 分别是数组 a 和数组 b 的长度。这个算法的时间复杂度是线性的，因为只需要遍历一次数组 a 和一次数组 b
+            // T = O(m+n)
+        }
+        return isBool;
     }
 
     // update (dt) {}
